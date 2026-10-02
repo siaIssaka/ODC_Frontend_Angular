@@ -1,0 +1,134 @@
+/* Faces « ODC Helvetica » : 55 Roman (400) et 75 Bold (700). Ordre de résolution :
+   1) la vraie Helvetica Neue si elle est installée sur l'appareil (Mac, iPhone, iPad) ;
+   2) TeX Gyre Heros, clone libre d'Helvetica (licence GUST, voir public/fonts/LICENSE-TeXGyre.txt), servi par le site
+      aux autres appareils (Windows, Android) : plus proche d'Helvetica qu'Arial.
+   Pour utiliser les fichiers officiels sous licence : les déposer dans public/fonts et décommenter les lignes « officiel ». */
+@font-face {
+  font-family: 'ODC Helvetica'; font-weight: 400; font-style: normal; font-display: swap;
+  src: local('Helvetica Neue LT Std 55 Roman'), local('HelveticaNeueLTStd-Roman'), local('Helvetica 55 Roman'), local('HelveticaNeue'), local('Helvetica Neue'),
+       /* officiel : url('/fonts/HelveticaNeue-Roman.woff2') format('woff2'), */
+       url('/fonts/TeXGyreHeros-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'ODC Helvetica'; font-weight: 700; font-style: normal; font-display: swap;
+  src: local('Helvetica Neue LT Std 75 Bold'), local('HelveticaNeueLTStd-Bd'), local('Helvetica 75 Bold'), local('HelveticaNeue-Bold'), local('Helvetica Neue Bold'),
+       /* officiel : url('/fonts/HelveticaNeue-Bold.woff2') format('woff2'), */
+       url('/fonts/TeXGyreHeros-Bold.woff2') format('woff2');
+}
+
+/**
+ * Styles globaux ODC Academy.
+ * Tailwind fournit les utilitaires ; ici on fixe la base (police, scroll, focus).
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  /* Typographie Orange Design System : Helvetica Neue 400 (texte) / 700 (titres, boutons, navigation) */
+  html, body, button, input, select, textarea {
+    font-family: 'ODC Helvetica', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  /* Orange : 75 Bold = interface (boutons, libellés, en-têtes de tableau), titres, sous-titres, texte d'accroche.
+     55 Roman = texte courant et données de tableau (le défaut du body). */
+  button, label, legend, th, summary { font-weight: 700; }
+  td, input, textarea, select { font-weight: 400; }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+
+  body {
+    @apply text-base font-normal leading-normal;
+    text-rendering: optimizeLegibility;
+    @apply m-0 min-h-screen bg-odc-gray font-sans text-odc-black antialiased;
+  }
+
+  ::selection {
+    background: #ff7900;
+    color: #111;
+  }
+
+  /* Focus visible pour l'accessibilité clavier */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-odc-orange;
+  }
+}
+
+@layer components {
+  /* Texte d'accroche (leading copy) : Helvetica Neue 75 Bold, un cran plus grand que le texte courant */
+  .lead { @apply text-lg font-bold leading-snug; }
+  /* Bouton principal orange (charte ODC) */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-odc-brand-orange px-5 py-3
+      text-sm font-bold text-odc-black transition hover:bg-odc-orange
+      disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-md border border-gray-300
+      bg-white px-4 py-2.5 text-sm font-semibold text-odc-black transition
+      hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .input-field {
+    @apply w-full rounded-md border border-gray-300 bg-white px-3 py-3 text-sm
+      text-odc-black placeholder:text-gray-400 focus:border-odc-orange focus:ring-1
+      focus:ring-odc-orange;
+  }
+
+  .card {
+    @apply rounded-2xl border border-gray-200 bg-white p-5 shadow-card;
+  }
+
+  .page-hero {
+    @apply relative overflow-hidden rounded-2xl bg-odc-brand-orange px-6 py-8 text-odc-black sm:px-10 sm:py-12;
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.16em] text-odc-orange;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full bg-odc-orange-light px-3 py-1 text-xs font-bold text-odc-orange;
+  }
+
+  .media-placeholder {
+    @apply flex min-h-48 items-end overflow-hidden rounded-xl bg-gradient-to-br from-orange-100 via-orange-200 to-orange-400 p-5 text-odc-black;
+  }
+
+  .resource-row {
+    @apply flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between;
+  }
+}
+
+/* ---- Pages de connexion / inscription (mobile d'abord) ---- */
+@layer components {
+  /* 16 px minimum : évite le zoom automatique d'iOS ; hauteur 48 px = cible tactile confortable */
+  /* Champs « remplis » façon maquette : fond gris, sans bordure ; 16 px min. (pas de zoom iOS) ; 48 px de haut (tactile) */
+  .auth-input {
+    @apply h-12 w-full rounded-none border-0 bg-[#efefef] px-4 text-base text-black outline-none
+      placeholder:text-gray-500 focus:ring-2 focus:ring-odc-brand-orange;
+  }
+  .auth-input[aria-invalid='true'] { @apply ring-2 ring-red-600; }
+  /* Bouton principal : orange Orange, texte noir (contraste 7:1), majuscules */
+  .auth-btn {
+    @apply inline-flex h-12 w-full items-center justify-center gap-2 rounded-none bg-odc-brand-orange px-5 text-sm
+      font-bold uppercase tracking-wider text-black transition active:scale-[0.98] hover:bg-black hover:text-white
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  /* Panneau orange (dégradé de la marque) avec cercles décoratifs */
+  .odc-panel { background: linear-gradient(200deg, #e86a00 0%, #ff7900 45%, #ffa13d 100%); position: relative; overflow: hidden; }
+  .odc-panel::before, .odc-panel::after { content: ''; position: absolute; border-radius: 9999px; pointer-events: none; }
+  .odc-panel::before { width: 16rem; height: 16rem; right: -6rem; top: -6rem; background: rgba(0, 0, 0, 0.08); }
+  .odc-panel::after { width: 12rem; height: 12rem; left: -4rem; bottom: -4rem; background: rgba(255, 255, 255, 0.2); }
+}
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.animate-rise { animation: rise 0.4s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .animate-rise { animation: none; } }
