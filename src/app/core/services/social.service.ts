@@ -11,7 +11,9 @@ export class SocialService {
   private readonly http = inject(HttpClient);
   private readonly b = environment.apiUrl;
 
-  mediaUrl(key: string | null | undefined): string | null { return key ? `${this.b}/media/${key}` : null; }
+  mediaUrl(key: string | null | undefined): string | null {
+    return key ? (/^https?:\/\//i.test(key) ? key : `${this.b}/media/${key}`) : null;
+  }
 
   getQuiz(lessonId: number): Observable<Quiz | null> { return this.http.get<Quiz | null>(`${this.b}/quizzes/lesson/${lessonId}`); }
   saveQuiz(lessonId: number, q: QuizDraft): Observable<Quiz> { return this.http.put<Quiz>(`${this.b}/quizzes/lesson/${lessonId}`, q); }

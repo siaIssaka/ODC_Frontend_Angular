@@ -38,6 +38,6 @@ export class BrandingService {
   }
 
   private url(key: string | null): string {
-    return key ? `${this.base}/media/${key}` : BrandingService.DEFAULT_LOGO;
+    return key ? (/^https?:\/\//i.test(key) ? key : `${this.base}/media/${key}`) : BrandingService.DEFAULT_LOGO;
   }
 }
