@@ -49,10 +49,16 @@ import { CourseRequest } from '../../core/models/learning.model';
         </div>
         <div class="pointer-events-none absolute -right-14 -top-16 h-60 w-60 rounded-full border-[34px] border-white/30" aria-hidden="true"></div>
       </header>
-      @if (enrollmentError()) {
-        <p class="mb-4 text-sm text-red-700" role="alert">{{ enrollmentError() }}</p>
-      }
-
+      @if (auth.role() === 'APPRENANT' && !enrolled()) {
+        <section class="card border-orange-200 bg-orange-50" aria-labelledby="enrollment-required-title">
+          <p class="eyebrow">Accès réservé</p>
+          <h2 id="enrollment-required-title" class="mt-1 text-xl font-bold">Vous n’êtes pas encore inscrit à ce cours</h2>
+          <p class="mt-2 text-sm leading-6 text-odc-navy">
+            Vous pouvez consulter cette formation dans le catalogue. L’accès aux modules, leçons et ressources sera activé dès que l’administrateur vous aura inscrit.
+          </p>
+          <a routerLink="/catalogue" class="btn-secondary mt-4">Retour au catalogue</a>
+        </section>
+      } @else {
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.6fr)]">
         <section class="space-y-6" aria-label="Contenu pédagogique">
           <div class="card">
@@ -208,6 +214,7 @@ import { CourseRequest } from '../../core/models/learning.model';
           </section>
         </aside>
       </div>
+      }
     }
     @if (openedPdf(); as pdf) {
       <div class="fixed inset-0 z-50 flex flex-col bg-[#252525]" role="dialog" aria-modal="true" [attr.aria-label]="'Lecteur PDF : ' + pdf.title">
@@ -262,7 +269,6 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
   readonly moduleError = signal<string | null>(null);
   readonly lessonError = signal<string | null>(null);
   readonly enrolled = signal(false);
-  readonly enrollmentError = signal<string | null>(null);
   readonly editingCourse = signal(false);
   readonly savingCourse = signal(false);
   readonly deletingCourse = signal(false);
@@ -308,27 +314,41 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
       this.loading.set(false);
       return;
     }
+    const user = this.auth.currentUser();
+    if (user?.role === 'APPRENANT') {
+      forkJoin({
+        course: this.catalog.getCourse(this.courseId),
+        enrollments: this.catalog.getEnrollments(user.id),
+      }).subscribe({
+        next: ({ course, enrollments }) => {
+          this.course.set(course);
+          this.enrolled.set(enrollments.some((e) => e.courseId === this.courseId && e.status === 'ACTIVE'));
+          if (!this.enrolled()) {
+            this.loading.set(false);
+            return;
+          }
+          this.loadCourseContent();
+        },
+        error: (error) => {
+          this.error.set(error?.status === 404
+            ? 'Ce cours n’existe pas ou n’est plus disponible.'
+            : 'Impossible de vérifier votre inscription. Actualisez la page ou contactez l’administrateur.');
+          this.loading.set(false);
+        },
+      });
+      return;
+    }
+
     forkJoin({
       course: this.catalog.getCourse(this.courseId),
       modules: this.catalog.getModules(this.courseId),
       lessons: this.catalog.getLessons(this.courseId),
     }).subscribe({
-      next: (result) => {
-        this.course.set(result.course);
-        this.modules.set(result.modules.sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0)));
-        this.lessons.set(result.lessons);
+      next: ({ course, modules, lessons }) => {
+        this.course.set(course);
+        this.modules.set(modules.sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0)));
+        this.lessons.set(lessons);
         this.loading.set(false);
-        const user = this.auth.currentUser();
-        if (user?.role === 'APPRENANT') {
-          this.catalog.getEnrollments(user.id).subscribe({
-            next: (enrollments) => {
-              this.enrolled.set(enrollments.some((e) => e.courseId === this.courseId && e.status === 'ACTIVE'));
-              this.enrollmentError.set(null);
-            },
-            error: () => this.enrollmentError.set('Impossible de vérifier votre inscription. Actualisez la page ou contactez l’administrateur.'),
-          });
-        }
-
       },
       error: (error) => {
         this.error.set(error?.status === 403
@@ -336,6 +356,23 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
           : error?.status === 404
             ? 'Ce cours n’existe pas ou n’est plus disponible.'
             : 'Impossible de charger le contenu du cours. Réessayez plus tard.');
+        this.loading.set(false);
+      },
+    });
+  }
+
+  private loadCourseContent(): void {
+    forkJoin({
+      modules: this.catalog.getModules(this.courseId),
+      lessons: this.catalog.getLessons(this.courseId),
+    }).subscribe({
+      next: ({ modules, lessons }) => {
+        this.modules.set(modules.sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0)));
+        this.lessons.set(lessons);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Impossible de charger le contenu du cours. Réessayez plus tard.');
         this.loading.set(false);
       },
     });

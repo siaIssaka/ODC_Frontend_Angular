@@ -8,7 +8,7 @@ import { AdminCohortOverview, CreateCourseSessionRequest, CourseSession, Lesson,
 
 /**
  * Appels du catalogue et des contenus pédagogiques, alignés sur les routes Spring.
- * GET /api/v1/courses est public ; formations, modules et leçons demandent un token.
+ * Le catalogue des cours est public ; le contenu pédagogique exige une inscription active.
  */
 @Injectable({ providedIn: 'root' })
 export class CatalogService {
