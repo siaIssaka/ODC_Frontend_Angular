@@ -10,7 +10,7 @@ import { AuthService } from '../core/services/auth.service';
   imports: [RouterLink, BrandLogoComponent],
   template: `
     <footer class="bg-black text-white" style="padding-bottom: env(safe-area-inset-bottom)">
-      <div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-3">
+      <div class="site-container grid gap-8 py-10 md:grid-cols-3">
         <div>
           <a routerLink="/catalogue" class="flex items-center gap-3" aria-label="ODC Academy, catalogue">
             <app-brand-logo slot="footer" [height]="56" />
@@ -39,7 +39,7 @@ import { AuthService } from '../core/services/auth.service';
         </nav>
       </div>
       <div class="border-t border-white/20">
-        <p class="mx-auto max-w-7xl px-4 py-4 text-xs text-white/70 sm:px-6">© {{ year }} Orange Digital Center — ODC Academy. Tous droits réservés.</p>
+        <p class="site-container py-4 text-xs text-white/70">© {{ year }} Orange Digital Center — ODC Academy. Tous droits réservés.</p>
       </div>
     </footer>
   `,

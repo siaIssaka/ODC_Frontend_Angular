@@ -25,6 +25,7 @@ Interface web de la plateforme ODC Academy, développée avec Angular standalone
 - Profil utilisateur modifiable et photo de profil.
 - Forums, messagerie et séances en direct Jitsi.
 - En-tête fixe avec navigation par catégories et menus de profil.
+- Interface responsive sur mobile, tablette, ordinateur et très grands écrans, avec contenu centré et largeur maximale évolutive.
 
 ## Prérequis
 
@@ -74,6 +75,8 @@ public/                Images, polices et ressources servies telles quelles
 ```
 
 L’application s’appuie sur Angular standalone et charge les pages métier en lazy loading depuis `src/app/app.routes.ts`.
+
+Les zones communes utilisent un conteneur fluide plafonné pour préserver la lisibilité sur les écrans de projection et autres très grands affichages. La taille de base de la typographie évolue avec le viewport, tandis que les vues détaillées conservent leur propre adaptation aux petits écrans.
 
 ## Rôles et navigation
 

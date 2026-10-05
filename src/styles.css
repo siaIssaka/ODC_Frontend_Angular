@@ -27,6 +27,7 @@
 @layer base {
   html {
     @apply scroll-smooth;
+    font-size: clamp(16px, calc(15px + 0.2vw), 20px);
   }
 
   /* Typographie Orange Design System : Helvetica Neue 400 (texte) / 700 (titres, boutons, navigation) */
@@ -47,6 +48,19 @@
     @apply text-base font-normal leading-normal;
     text-rendering: optimizeLegibility;
     @apply m-0 min-h-screen bg-odc-gray font-sans text-odc-black antialiased;
+    overflow-x: clip;
+  }
+
+  :where(img, video, iframe, canvas, svg) {
+    max-inline-size: 100%;
+  }
+
+  :where(input, select, textarea, button) {
+    max-inline-size: 100%;
+  }
+
+  :where(pre, code) {
+    overflow-wrap: anywhere;
   }
 
   ::selection {
@@ -61,6 +75,12 @@
 }
 
 @layer components {
+  .site-container {
+    @apply mx-auto w-full;
+    max-width: 104rem;
+    padding-inline: clamp(1rem, 3vw, 3.5rem);
+  }
+
   /* Texte d'accroche (leading copy) : Helvetica Neue 75 Bold, un cran plus grand que le texte courant */
   .lead { @apply text-lg font-bold leading-snug; }
   /* Bouton principal orange (charte ODC) */
@@ -104,6 +124,12 @@
 
   .resource-row {
     @apply flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between;
+  }
+}
+
+@media (max-width: 639px) {
+  .card {
+    padding: 1rem;
   }
 }
 

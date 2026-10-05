@@ -20,7 +20,7 @@ import { AuthService } from '../core/services/auth.service';
       <app-odc-header />
 
       <!-- Contenu de la page active -->
-      <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6">
+      <main class="site-container flex-1 py-6">
         <router-outlet />
       </main>
 

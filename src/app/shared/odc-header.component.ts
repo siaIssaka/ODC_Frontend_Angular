@@ -18,13 +18,13 @@ import { Category, Formation } from '../core/models/formation.model';
   imports: [RouterLink, AvatarComponent, BrandLogoComponent],
   template: `
     <header #header class="fixed inset-x-0 top-0 z-50 bg-black text-white shadow-md">
-      <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
+      <div class="site-container flex items-center gap-4 py-3">
         <a routerLink="/catalogue" class="flex shrink-0 items-center gap-3">
           <app-brand-logo slot="header" [height]="40" [compact]="true" />
         </a>
 
         <!-- Menu catégories (desktop) -->
-        <nav class="ml-4 hidden flex-1 items-center gap-1 lg:flex" aria-label="Catégories de formations" (mouseleave)="open.set(null)">
+        <nav class="ml-4 hidden min-w-0 flex-1 items-center gap-1 xl:flex" aria-label="Catégories de formations" (mouseleave)="open.set(null)">
           @for (c of menuCategories(); track c.id) {
             <div class="relative" (mouseenter)="open.set(c.id)">
               <button type="button" class="flex items-center gap-1 border-b-2 px-3 py-2 text-sm font-bold uppercase tracking-wide hover:text-odc-brand-orange"
@@ -79,14 +79,14 @@ import { Category, Formation } from '../core/models/formation.model';
             <a routerLink="/login" class="rounded-md bg-odc-brand-orange px-4 py-2 text-black hover:bg-white">Connexion</a>
             <a routerLink="/register" class="hidden rounded-md border-2 border-white px-4 py-2 hover:bg-white hover:text-black sm:inline">Inscription</a>
           }
-          <button type="button" class="ml-1 flex h-10 w-10 items-center justify-center border-2 border-white lg:hidden"
+          <button type="button" class="ml-1 flex h-10 w-10 shrink-0 items-center justify-center border-2 border-white xl:hidden"
                   (click)="mobile.set(!mobile())" [attr.aria-expanded]="mobile()" aria-label="Menu">{{ mobile() ? '✕' : '☰' }}</button>
         </div>
       </div>
 
       <!-- Menu mobile : accordéon -->
       @if (mobile()) {
-        <nav class="absolute inset-x-0 top-full max-h-[80vh] overflow-y-auto border-t border-white/20 bg-black px-4 pb-4 lg:hidden" aria-label="Menu mobile">
+        <nav class="absolute inset-x-0 top-full max-h-[80vh] overflow-y-auto border-t border-white/20 bg-black px-4 pb-4 xl:hidden" aria-label="Menu mobile">
           @for (c of menuCategories(); track c.id) {
             <button type="button" class="flex w-full items-center justify-between border-b border-white/20 py-3 text-left text-sm font-bold uppercase"
                     (click)="open.set(open() === c.id ? null : c.id)">{{ c.name }} <span>{{ open() === c.id ? '−' : '+' }}</span></button>

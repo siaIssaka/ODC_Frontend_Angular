@@ -16,7 +16,7 @@ import { OdcHeaderComponent } from '../shared/odc-header.component';
     } @else {
       <div class="flex min-h-dvh flex-col bg-odc-gray">
         <app-odc-header />
-        <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6"><router-outlet /></main>
+        <main class="site-container flex-1 py-6"><router-outlet /></main>
         <app-odc-footer />
       </div>
     }
