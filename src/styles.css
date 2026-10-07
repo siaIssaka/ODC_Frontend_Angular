@@ -26,8 +26,9 @@
 
 @layer base {
   html {
-    @apply scroll-smooth;
+    @apply scroll-smooth bg-odc-gray;
     font-size: clamp(16px, calc(15px + 0.2vw), 20px);
+    overscroll-behavior-y: none;
   }
 
   /* Typographie Orange Design System : Helvetica Neue 400 (texte) / 700 (titres, boutons, navigation) */
@@ -47,7 +48,7 @@
   body {
     @apply text-base font-normal leading-normal;
     text-rendering: optimizeLegibility;
-    @apply m-0 min-h-screen bg-odc-gray font-sans text-odc-black antialiased;
+    @apply m-0 min-h-dvh bg-odc-gray font-sans text-odc-black antialiased;
     overflow-x: clip;
   }
 

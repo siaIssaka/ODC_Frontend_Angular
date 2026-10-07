@@ -15,7 +15,7 @@ import { AuthService } from '../core/services/auth.service';
   standalone: true,
   imports: [RouterOutlet, OdcHeaderComponent, OdcFooterComponent],
   template: `
-    <div class="min-h-screen flex flex-col bg-odc-gray">
+    <div class="min-h-dvh flex flex-col bg-odc-gray">
       <!-- Barre supérieure -->
       <app-odc-header />
 
